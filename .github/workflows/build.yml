@@ -49,7 +49,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r tests/requirements-tools.txt
           python -m pip install -r tests/requirements-libraries.txt
-          python -m pip install pefile altgraph
+          python -m pip install .
           python -m pytest tests/unit tests/functional
 
       - name: Test Bootloader (x86)
@@ -61,7 +61,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r tests/requirements-tools.txt
           python -m pip install -r tests/requirements-libraries.txt
-          python -m pip install pefile altgraph
+          python -m pip install .
           python -m pytest tests/unit tests/functional
 
       - name: Test mangadex-downloader (x64)
