@@ -104,10 +104,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mangadex-dl_x64
-          path: pyinstaller/mangadex-downloader/dist_x64/mangadex-dl/
+          path: mangadex-downloader/dist_x64/mangadex-dl/
 
       - name: Upload artifact (x86)
         uses: actions/upload-artifact@v4
         with:
           name: mangadex-dl_x86
-          path: pyinstaller/mangadex-downloader/dist_x86/mangadex-dl/
+          path: mangadex-downloader/dist_x86/mangadex-dl/
