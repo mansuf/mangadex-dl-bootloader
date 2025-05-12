@@ -1,3 +1,4 @@
 [submodule "pyinstaller"]
 	path = pyinstaller
 	url = https://github.com/pyinstaller/pyinstaller
+	branch = v6.13.0
