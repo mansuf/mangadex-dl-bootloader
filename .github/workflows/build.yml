@@ -50,7 +50,7 @@ jobs:
           python -m pip install -r tests/requirements-tools.txt
           python -m pip install -r tests/requirements-libraries.txt
           python -m pip install .
-          python -m pytest tests/unit tests/functional
+          python -m pytest tests/unit tests/functional -n 4
 
       - name: Test Bootloader (x86)
         run: |
@@ -62,7 +62,7 @@ jobs:
           python -m pip install -r tests/requirements-tools.txt
           python -m pip install -r tests/requirements-libraries.txt
           python -m pip install .
-          python -m pytest tests/unit tests/functional
+          python -m pytest tests/unit tests/functional -n 4
 
       - name: Test mangadex-downloader (x64)
         run: |
