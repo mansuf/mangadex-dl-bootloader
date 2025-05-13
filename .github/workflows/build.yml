@@ -40,29 +40,29 @@ jobs:
           cd pyinstaller\bootloader
           py -${{ matrix.python-version }}-32 ./waf all
 
-      # - name: Test Bootloader (x64)
-      #   run: |
-      #     py -${{ matrix.python-version }}-64 -m venv bootloader_build_x64
-      #     bootloader_build_x64\Scripts\activate.ps1
+      - name: Test Bootloader (x64)
+        run: |
+          py -${{ matrix.python-version }}-64 -m venv bootloader_build_x64
+          bootloader_build_x64\Scripts\activate.ps1
 
-      #     cd pyinstaller
-      #     python -m pip install --upgrade pip
-      #     python -m pip install -r tests/requirements-tools.txt
-      #     python -m pip install -r tests/requirements-libraries.txt
-      #     python -m pip install .
-      #     python -m pytest tests/unit tests/functional -n 4
+          cd pyinstaller
+          python -m pip install --upgrade pip
+          python -m pip install -r tests/requirements-tools.txt
+          python -m pip install -r tests/requirements-libraries.txt
+          python -m pip install .
+          python -m pytest tests/unit tests/functional -n 4
 
-      # - name: Test Bootloader (x86)
-      #   run: |
-      #     py -${{ matrix.python-version }}-32 -m venv bootloader_build_x86
-      #     bootloader_build_x86\Scripts\activate.ps1
+      - name: Test Bootloader (x86)
+        run: |
+          py -${{ matrix.python-version }}-32 -m venv bootloader_build_x86
+          bootloader_build_x86\Scripts\activate.ps1
 
-      #     cd pyinstaller
-      #     python -m pip install --upgrade pip
-      #     python -m pip install -r tests/requirements-tools.txt
-      #     python -m pip install -r tests/requirements-libraries.txt
-      #     python -m pip install .
-      #     python -m pytest tests/unit tests/functional -n 4
+          cd pyinstaller
+          python -m pip install --upgrade pip
+          python -m pip install -r tests/requirements-tools.txt
+          python -m pip install -r tests/requirements-libraries.txt
+          python -m pip install .
+          python -m pytest tests/unit tests/functional -n 4
 
       - name: Compile mangadex-downloader (x64)
         run: |
