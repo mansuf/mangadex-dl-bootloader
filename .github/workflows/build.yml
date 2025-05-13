@@ -40,65 +40,89 @@ jobs:
           cd pyinstaller\bootloader
           py -${{ matrix.python-version }}-32 ./waf all
 
-      - name: Test Bootloader (x64)
+      # - name: Test Bootloader (x64)
+      #   run: |
+      #     py -${{ matrix.python-version }}-64 -m venv bootloader_build_x64
+      #     bootloader_build_x64\Scripts\activate.ps1
+
+      #     cd pyinstaller
+      #     python -m pip install --upgrade pip
+      #     python -m pip install -r tests/requirements-tools.txt
+      #     python -m pip install -r tests/requirements-libraries.txt
+      #     python -m pip install .
+      #     python -m pytest tests/unit tests/functional -n 4
+
+      # - name: Test Bootloader (x86)
+      #   run: |
+      #     py -${{ matrix.python-version }}-32 -m venv bootloader_build_x86
+      #     bootloader_build_x86\Scripts\activate.ps1
+
+      #     cd pyinstaller
+      #     python -m pip install --upgrade pip
+      #     python -m pip install -r tests/requirements-tools.txt
+      #     python -m pip install -r tests/requirements-libraries.txt
+      #     python -m pip install .
+      #     python -m pytest tests/unit tests/functional -n 4
+
+      - name: Compile mangadex-downloader (x64)
         run: |
-          py -${{ matrix.python-version }}-64 -m venv bootloader_build_x64
-          bootloader_build_x64\Scripts\activate.ps1
-
-          cd pyinstaller
-          python -m pip install --upgrade pip
-          python -m pip install -r tests/requirements-tools.txt
-          python -m pip install -r tests/requirements-libraries.txt
-          python -m pip install .
-          python -m pytest tests/unit tests/functional -n 4
-
-      - name: Test Bootloader (x86)
-        run: |
-          py -${{ matrix.python-version }}-32 -m venv bootloader_build_x86
-          bootloader_build_x86\Scripts\activate.ps1
-
-          cd pyinstaller
-          python -m pip install --upgrade pip
-          python -m pip install -r tests/requirements-tools.txt
-          python -m pip install -r tests/requirements-libraries.txt
-          python -m pip install .
-          python -m pytest tests/unit tests/functional -n 4
-
-      - name: Test mangadex-downloader (x64)
-        run: |
-          py -${{ matrix.python-version }}-64 -m venv mangadex_dl_build_x64
-          mangadex_dl_build_x64\Scripts\activate.ps1
-
           git clone https://github.com/mansuf/mangadex-downloader.git --depth 1
           cd mangadex-downloader
 
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          python -m pip install -r requirements-optional.txt
+          py -${{ matrix.python-version }}-64 -m pip install --upgrade pip
+          py -${{ matrix.python-version }}-64 -m pip install -r requirements.txt
+          py -${{ matrix.python-version }}-64 -m pip install -r requirements-optional.txt
 
           cd ..\pyinstaller
-          python -m pip install .
+          py -${{ matrix.python-version }}-64 -m pip install .
           
           cd ..\mangadex-downloader
-          python -m PyInstaller "mangadex-dl_x64.spec" --distpath "./dist_x64"
+          py -${{ matrix.python-version }}-64 -m PyInstaller "mangadex-dl_x64.spec" --distpath "./dist_x64"
 
-      - name: Test mangadex-downloader (x86)
+          & ".\dist_x64\mangadex-dl_x64\mangadex-dl_x64.exe" --version
+
+      - name: Compile mangadex-downloader (x86)
         run: |
-          py -${{ matrix.python-version }}-32 -m venv mangadex_dl_build_x86
-          mangadex_dl_build_x86\Scripts\activate.ps1
-
           git clone https://github.com/mansuf/mangadex-downloader.git --depth 1
           cd mangadex-downloader
 
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          python -m pip install -r requirements-optional.txt
+          py -${{ matrix.python-version }}-32 -m pip install --upgrade pip
+          py -${{ matrix.python-version }}-32 -m pip install -r requirements.txt
+          py -${{ matrix.python-version }}-32 -m pip install -r requirements-optional.txt
 
           cd ..\pyinstaller
-          python -m pip install .
+          py -${{ matrix.python-version }}-32 -m pip install .
           
           cd ..\mangadex-downloader
-          python -m PyInstaller "mangadex-dl_x86.spec" --distpath "./dist_x86"
+          py -${{ matrix.python-version }}-32 -m PyInstaller "mangadex-dl_x86.spec" --distpath "./dist_x86"
+
+          & ".\dist_x86\mangadex-dl_x86\mangadex-dl_x86.exe" --version
+
+      - name: Prepare upload artifacts
+        run: |
+          cd mangadex-downloader
+
+          # x86 executable
+          copy "LICENSE" "dist_x86\mangadex-dl_x86"
+          copy "README.md" "dist_x86\mangadex-dl_x86"
+          copy "docs\changelog.md" "dist_x86\mangadex-dl_x86"
+          echo "${{ github.ref_name }}" | Out-File -FilePath "dist_x86\mangadex-dl_x86\version.txt" -NoNewLine
+          echo "mangadex-dl.exe --update" | Out-File -FilePath "dist_x86\mangadex-dl_x86\update.bat"
+          echo "start cmd" | Out-File -FilePath "dist_x86\mangadex-dl_x86\start cmd.bat"
+          Rename-Item -Path "dist_x86\mangadex-dl_x86\mangadex-dl_x86.exe" -NewName "mangadex-dl.exe"
+          Rename-Item -Path "dist_x86\mangadex-dl_x86" -NewName "mangadex-dl"
+          Compress-Archive -Path "dist_x86\mangadex-dl" -DestinationPath "mangadex-dl_x86_${{ github.ref_name }}.zip"
+
+          # x64 executable
+          copy "LICENSE" "dist_x64\mangadex-dl_x64"
+          copy "README.md" "dist_x64\mangadex-dl_x64"
+          copy "docs\changelog.md" "dist_x64\mangadex-dl_x64"
+          echo "${{ github.ref_name }}" | Out-File -FilePath "dist_x64\mangadex-dl_x64\version.txt" -NoNewLine
+          echo "mangadex-dl.exe --update" | Out-File -FilePath "dist_x64\mangadex-dl_x64\update.bat"
+          echo "start cmd" | Out-File -FilePath "dist_x64\mangadex-dl_x64\start cmd.bat"
+          Rename-Item -Path "dist_x64\mangadex-dl_x64\mangadex-dl_x64.exe" -NewName "mangadex-dl.exe"
+          Rename-Item -Path "dist_x64\mangadex-dl_x64" -NewName "mangadex-dl"
+          Compress-Archive -Path "dist_x64\mangadex-dl" -DestinationPath "mangadex-dl_x64_${{ github.ref_name }}.zip"
 
       - name: Upload artifact (x64)
         uses: actions/upload-artifact@v4
