@@ -135,3 +135,21 @@ jobs:
         with:
           name: mangadex-dl_x86
           path: mangadex-downloader/dist_x86/mangadex-dl/
+
+      - name: Copy ready to use PyInstaller
+        run: |
+          Copy-Item ".\pyinstaller\" ".\ready_to_use" -Recurse
+
+      - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
+        with:
+          # The name of the user that will be displayed as the author of the commit.
+          # Default: depends on the default_author input
+          author_name: Rahman Yusuf
+
+          # The message for the commit.
+          # Default: 'Commit from GitHub Actions (name of the workflow)'
+          message: '[skip ci] Update ready to use PyInstaller'
+
+          # Whether to push the commit and, if any, its tags to the repo. It can also be used to set the git push arguments (see the paragraph below for more info)
+          # Default: true
+          push: false
