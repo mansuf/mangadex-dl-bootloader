@@ -137,13 +137,60 @@ jobs:
           name: mangadex-dl_x86
           path: mangadex-downloader/dist_x86/mangadex-dl/
 
-      - name: Copy ready to use PyInstaller
+      - name: Copy ready to use PyInstaller (Thank you AI)
         run: |
-          Remove-Item "mangadex-downloader" -Recurse -Force
-          Remove-Item "bootloader_build_x64" -Recurse -Force
-          Remove-Item "bootloader_build_x86" -Recurse -Force
-          Copy-Item ".\pyinstaller\" ".\ready_to_use" -Recurse -Force
-          Remove-Item "ready_to_use\.git" -Recurse -Force
+          # Function to handle errors gracefully
+          function Handle-Error {
+              param (
+                  [string]$errorMessage
+              )
+              Write-Host "ERROR: $errorMessage" -ForegroundColor Red
+              exit 1 # Exit the script with a non-zero exit code to indicate failure
+          }
+
+          # Remove the "mangadex-downloader" directory
+          try {
+              Remove-Item "mangadex-downloader" -Recurse -Force -ErrorAction Stop
+          } catch {
+              Handle-Error "Failed to remove 'mangadex-downloader'. Error: $_"
+          }
+
+          # Remove the "bootloader_build_x64" directory
+          try {
+              Remove-Item "bootloader_build_x64" -Recurse -Force -ErrorAction Stop
+          } catch {
+              Handle-Error "Failed to remove 'bootloader_build_x64'. Error: $_"
+          }
+
+          # Remove the "bootloader_build_x86" directory
+          try {
+              Remove-Item "bootloader_build_x86" -Recurse -Force -ErrorAction Stop
+          } catch {
+              Handle-Error "Failed to remove 'bootloader_build_x86'. Error: $_"
+          }
+
+          # Remove the "pyinstaller" directory itself
+          try {
+              Remove-Item ".\pyinstaller" -Recurse -Force -ErrorAction Stop
+          } catch {
+              Handle-Error "Failed to remove 'pyinstaller'. Error: $_"
+          }
+
+          # Copy the contents of the "pyinstaller" directory to "ready_to_use"
+          try {
+              Copy-Item ".\pyinstaller\" ".\ready_to_use" -Recurse -Force -ErrorAction Stop
+          } catch {
+              Handle-Error "Failed to copy 'pyinstaller' to 'ready_to_use'. Error: $_"
+          }
+
+          # Remove the ".git" directory inside "ready_to_use"
+          try {
+              Remove-Item "ready_to_use\.git" -Recurse -Force -ErrorAction Stop
+          } catch {
+              Handle-Error "Failed to remove 'ready_to_use\.git'. Error: $_"
+          }
+
+          Write-Host "All operations completed successfully." -ForegroundColor Green
 
       - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
         with:
