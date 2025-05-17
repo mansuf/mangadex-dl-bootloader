@@ -169,11 +169,11 @@ jobs:
               Handle-Error "Failed to remove 'bootloader_build_x86'. Error: $_"
           }
 
-          # Remove the "pyinstaller" directory itself
+          # Remove the "ready_to_use" directory itself
           try {
-              Remove-Item ".\pyinstaller" -Recurse -Force -ErrorAction Stop
+              Remove-Item ".\ready_to_use" -Recurse -Force -ErrorAction Stop
           } catch {
-              Handle-Error "Failed to remove 'pyinstaller'. Error: $_"
+              Handle-Error "Failed to remove 'ready_to_use'. Error: $_"
           }
 
           # Copy the contents of the "pyinstaller" directory to "ready_to_use"
