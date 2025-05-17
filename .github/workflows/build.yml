@@ -142,7 +142,7 @@ jobs:
           Remove-Item "mangadex-downloader" -Recurse -Force
           Remove-Item "bootloader_build_x64" -Recurse -Force
           Remove-Item "bootloader_build_x86" -Recurse -Force
-          Copy-Item ".\pyinstaller\" ".\ready_to_use" -Recurse
+          Copy-Item ".\pyinstaller\" ".\ready_to_use" -Recurse -Force
           Remove-Item "ready_to_use\.git" -Recurse -Force
 
       - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
